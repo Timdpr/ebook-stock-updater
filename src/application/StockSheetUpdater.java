@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,6 +25,7 @@ public class StockSheetUpdater {
 	
 	public void update() {
 		try {
+			// Open both sheets, perform update:
 			FileInputStream reportFile = new FileInputStream(this.salesReport);
 			XSSFWorkbook reportBook = new XSSFWorkbook(reportFile);
 			XSSFSheet reportSheet = reportBook.getSheetAt(2);
@@ -37,13 +37,13 @@ public class StockSheetUpdater {
 			updateEbookProfitsWithReport(reportSheet, stockSheet);
 			
 			stockBook.setForceFormulaRecalculation(true);
-			stockFile.close();
+			stockFile.close(); // Close files
 			reportFile.close();
 			
 			FileOutputStream outputFile = new FileOutputStream(this.stockSheet);
-			stockBook.write(outputFile);
+			stockBook.write(outputFile); // Save changes
 			outputFile.close();
-			stockBook.close();
+			stockBook.close(); // Close workbooks
 			reportBook.close();
 			
 		} catch (FileNotFoundException e) {
@@ -57,9 +57,18 @@ public class StockSheetUpdater {
 		int rowNum = 1;
 		Cell cell = reportSheet.getRow(rowNum).getCell(2);
 		while ( !(cell.toString() == "") ) {
+			// Populate needed values; calculate
+			cell = reportSheet.getRow(rowNum).getCell(2);
 			String asin = cell.toString();
 			double listPrice = getDoubleFromCell(reportSheet.getRow(rowNum).getCell(9));
 			double netUnitsSold = getDoubleFromCell(reportSheet.getRow(rowNum).getCell(8));
+			String royaltyTemp = reportSheet.getRow(rowNum).getCell(4).toString();
+			double amazonRoyalty = Double.parseDouble(royaltyTemp.replaceAll("%", ""));
+			
+			double profit = (netUnitsSold * (listPrice * this.exchangeRate)) * amazonRoyalty;
+			System.out.println(profit);
+			
+			rowNum++;
 		}
 	}
 	

@@ -36,12 +36,12 @@ public class StockSheetUpdater {
 			
 			updateEbookProfitsWithReport(reportSheet, stockSheet);
 			
-			stockBook.setForceFormulaRecalculation(true);
+			stockBook.setForceFormulaRecalculation(true); // (set.. on next open)
 			stockFile.close(); // Close files
 			reportFile.close();
 			
 			FileOutputStream outputFile = new FileOutputStream(this.stockSheet);
-			stockBook.write(outputFile); // Save changes
+			stockBook.write(outputFile); // Save changes	
 			outputFile.close();
 			stockBook.close(); // Close workbooks
 			reportBook.close();
@@ -55,21 +55,35 @@ public class StockSheetUpdater {
 	
 	public void updateEbookProfitsWithReport(XSSFSheet reportSheet, XSSFSheet stockSheet) {
 		int rowNum = 1;
-		Cell cell = reportSheet.getRow(rowNum).getCell(2);
-		while ( !(cell.toString() == "") ) {
+		Cell cell = reportSheet.getRow(0).getCell(0);
+		while ( !(cell == null) ) {
 			// Populate needed values; calculate
-			cell = reportSheet.getRow(rowNum).getCell(2);
+			try {
+				cell = reportSheet.getRow(rowNum).getCell(2);
+			} catch (NullPointerException e) {
+				System.out.println("Null pointer while getting cell");
+			}
 			String asin = cell.toString();
 			double listPrice = getDoubleFromCell(reportSheet.getRow(rowNum).getCell(9));
 			double netUnitsSold = getDoubleFromCell(reportSheet.getRow(rowNum).getCell(8));
 			String royaltyTemp = reportSheet.getRow(rowNum).getCell(4).toString();
-			double amazonRoyalty = Double.parseDouble(royaltyTemp.replaceAll("%", ""));
+			double amazonRoyalty = (Double.parseDouble(royaltyTemp.replaceAll("%", ""))) / 100;
+			
+			/* Test:
+			 * System.out.println("Row number = " + rowNum);
+			 * System.out.println("asin = " + asin);
+			 * System.out.println("listPrice = " + listPrice);
+			 * System.out.println("netUnitsSold = " + netUnitsSold);
+			 * System.out.println("royaltyTemp = " + royaltyTemp);
+			 * System.out.println("amazonRoyalty = " + amazonRoyalty);
+			 * System.out.println("this.exchangeRate = " + this.exchangeRate);
+			 */
 			
 			double profit = (netUnitsSold * (listPrice * this.exchangeRate)) * amazonRoyalty;
 			System.out.println(profit);
-			
 			rowNum++;
 		}
+		System.out.println("Out of loop");
 	}
 	
 	public double getDoubleFromCell(XSSFCell cell) {

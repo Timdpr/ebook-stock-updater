@@ -27,11 +27,12 @@ public class MainController {
 	
 	@FXML protected void update(ActionEvent event) {
 		try {
+			getExchangeRate();
 			StockSheetUpdater updater = new StockSheetUpdater(salesReport, stockSheet, exchangeRate);
 			updater.update();
 		} catch (NullPointerException e) {
 			errorLabel.setText("Error: Make sure both spreadsheets are selected");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -45,7 +46,7 @@ public class MainController {
 		getStockSheet.setText("Selected");
 	}
 	
-    @FXML protected void getExchangeRate(ActionEvent event) {
+    public void getExchangeRate() {
     	this.exchangeRate = Double.parseDouble(exchangeField.getText());
     }
 	

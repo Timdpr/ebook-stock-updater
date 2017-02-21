@@ -45,7 +45,8 @@ public class StockSheetUpdater {
 				stockBook.setForceFormulaRecalculation(true); // (set.. on next open)
 				stockFile.close(); // Close files
 				reportFile.close();
-				try { // Save changes, close workbooks
+				try { 
+					// Save changes, close workbooks
 					FileOutputStream outputFile = new FileOutputStream(this.stockSheet);
 					stockBook.write(outputFile);	
 					outputFile.close();
@@ -79,34 +80,25 @@ public class StockSheetUpdater {
 			double netUnitsSold = getDoubleFromCell(reportSheet.getRow(reportRowNum).getCell(8));
 			String royaltyTemp = reportSheet.getRow(reportRowNum).getCell(4).toString();
 			double amazonRoyalty = (Double.parseDouble(royaltyTemp.replaceAll("%", ""))) / 100;
-			System.out.println("asin = " + asin);
-			System.out.println("netUnitsSold = " + netUnitsSold);
-			System.out.println("amazonRoyalty = " + amazonRoyalty);
 			
 			// Populate needed values from stock sheet:
-			int stockRowNum = findRow(stockSheet, asin);
+			int stockRowNum = findRowNumber(stockSheet, asin);
 			try {
 				if (!(stockRowNum == 0)) {
 				    double listPrice = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(26));
 				    double authorRoyalty = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(27));
-				    System.out.println("listPrice = " + listPrice);
-				    System.out.println("authorRoyalty = " + authorRoyalty);
 				    
 				    // Calculate profit, round to 2dp, set as double:
 				    BigDecimal BDprofit = new BigDecimal(
 				    		((netUnitsSold * listPrice) * amazonRoyalty) * authorRoyalty);
 				    BDprofit = BDprofit.setScale(2, BigDecimal.ROUND_HALF_UP);
 				    double profit = BDprofit.doubleValue();
-				    System.out.println("profit = " + profit);
 				    
 				    // Add to eBook Profit column:
 				    Cell profitCell = stockSheet.getRow(stockRowNum).getCell(16);
-				    System.out.println("profitCell before writing: " + profitCell);
 				    profit = profit + profitCell.getNumericCellValue();
 				    profitCell.setCellValue(profit);
-				    System.out.println("profitCell after writing: " + profitCell + "\n");
 				} else {
-					System.out.println("\nError! findRow returned 0!\n");
 					errorLabel.setText("Error: eBook not found in stock sheet, ASIN: " + asin);
 					throw new RuntimeException();
 				}
@@ -118,11 +110,12 @@ public class StockSheetUpdater {
 		}
 	}
 	
-	private static int findRow(XSSFSheet sheet, String cellContent) {
+	private static int findRowNumber(XSSFSheet sheet, String asin) {
+		// Returns row number of row that given ASIN is in
 	    for (Row row : sheet) {
 	        for (Cell cell : row) {
 	            if (cell.getCellTypeEnum() == CellType.STRING) {
-	                if (cell.getRichStringCellValue().getString().trim().equals(cellContent)) {
+	                if (cell.getRichStringCellValue().getString().trim().equals(asin)) {
 	                    return row.getRowNum();  
 	                }
 	            }
@@ -133,5 +126,4 @@ public class StockSheetUpdater {
 	
 	public double getDoubleFromCell(XSSFCell cell) {
 		return Double.parseDouble(cell.toString());
-	}
-}
+	}}

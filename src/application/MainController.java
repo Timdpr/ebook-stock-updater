@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -18,21 +17,22 @@ public class MainController {
 	private Button getStockSheet;
 	@FXML
 	private Label errorLabel;
-	@FXML
-	private TextField exchangeField;
 	
 	private File salesReport;
 	private File stockSheet;
-	private double exchangeRate;
 	
 	@FXML protected void update(ActionEvent event) {
 		try {
-			getExchangeRate();
-			StockSheetUpdater updater = new StockSheetUpdater(salesReport, stockSheet, exchangeRate);
-			updater.update();
+			salesReport.exists();
+			stockSheet.exists();
 		} catch (NullPointerException e) {
 			errorLabel.setText("Error: Make sure both spreadsheets are selected");
-			//e.printStackTrace();
+		}
+		try {
+		    StockSheetUpdater updater = new StockSheetUpdater(salesReport, stockSheet, errorLabel);
+		    updater.update();
+		} catch (NullPointerException e) {
+			System.out.println("End of reportSheet rows");
 		}
 	}
 	
@@ -45,10 +45,6 @@ public class MainController {
 		this.stockSheet = getFile();
 		getStockSheet.setText("Selected");
 	}
-	
-    public void getExchangeRate() {
-    	this.exchangeRate = Double.parseDouble(exchangeField.getText());
-    }
 	
 	public File getFile() {
 		FileChooser chooser = new FileChooser();

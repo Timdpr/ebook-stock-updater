@@ -33,7 +33,7 @@
          <children>
             <ImageView fitHeight="72.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../res/tartarus-press.jpg" />
+                  <Image url="file:/C:/Users/Tim/Documents/workspace/ebook-stock-updater/res/tartarus-press.jpg" />
                </image>
             </ImageView>
          </children>

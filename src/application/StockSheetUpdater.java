@@ -51,6 +51,7 @@ public class StockSheetUpdater {
 					outputFile.close();
 					stockBook.close();
 					reportBook.close();
+					errorLabel.setText("Done!");
 				} catch (FileNotFoundException fnf) {
 					errorLabel.setText("Cannot write to file, make sure neither spreadsheet "
 							+ "is already open");

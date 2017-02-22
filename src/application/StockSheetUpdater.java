@@ -126,4 +126,5 @@ public class StockSheetUpdater {
 	
 	public double getDoubleFromCell(XSSFCell cell) {
 		return Double.parseDouble(cell.toString());
-	}}
+	}
+}

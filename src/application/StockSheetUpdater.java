@@ -71,7 +71,9 @@ public class StockSheetUpdater {
 		// For a single row in the report sheet:
 		int reportRowNum = 1;
 		while ( !(cell == null) ) {
-			try { // Populate needed values from report sheet:
+			
+			// Populate needed values from report sheet:
+			try { 
 				cell = reportSheet.getRow(reportRowNum).getCell(2);
 			} catch (NullPointerException e) {
 				System.out.println("Null pointer while getting cell");
@@ -85,8 +87,8 @@ public class StockSheetUpdater {
 			int stockRowNum = findRowNumber(stockSheet, asin);
 			try {
 				if (!(stockRowNum == 0)) {
-				    double listPrice = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(26));
-				    double authorRoyalty = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(27));
+				    double listPrice = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(28));
+				    double authorRoyalty = getDoubleFromCell(stockSheet.getRow(stockRowNum).getCell(30));
 				    
 				    // Calculate profit, round to 2dp, set as double:
 				    BigDecimal BDprofit = new BigDecimal(

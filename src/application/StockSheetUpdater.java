@@ -45,8 +45,7 @@ public class StockSheetUpdater {
 				stockBook.setForceFormulaRecalculation(true); // (set.. on next open)
 				stockFile.close(); // Close files
 				reportFile.close();
-				try { 
-					// Save changes, close workbooks
+				try { // Save changes, close workbooks
 					FileOutputStream outputFile = new FileOutputStream(this.stockSheet);
 					stockBook.write(outputFile);	
 					outputFile.close();

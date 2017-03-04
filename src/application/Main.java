@@ -16,7 +16,6 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Tartarus eBook Stock Updater");
-			primaryStage.setResizable(true);
 			primaryStage.getIcons().addAll(
 			// JavaFX is bad at auto choosing icons, so, many are given, ending with 48x48 as a compromise:
 					new Image(getClass().getResourceAsStream("logo16.png")), 

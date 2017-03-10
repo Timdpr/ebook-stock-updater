@@ -111,8 +111,10 @@ public class StockSheetUpdater {
 		}
 	}
 	
+	/**
+	 * @return row number of row that given ASIN is in
+	 */
 	private static int findRowNumber(XSSFSheet sheet, String asin) {
-		// Returns row number of row that given ASIN is in
 	    for (Row row : sheet) {
 	        for (Cell cell : row) {
 	            if (cell.getCellTypeEnum() == CellType.STRING) {
@@ -122,7 +124,7 @@ public class StockSheetUpdater {
 	            }
 	        }
 	    }               
-	    return 0;
+	    return 0; // Can I handle this better?
 	}
 	
 	public double getDoubleFromCell(XSSFCell cell) {

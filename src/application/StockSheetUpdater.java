@@ -80,7 +80,8 @@ public class StockSheetUpdater {
 			String asin = cell.toString();
 			double netUnitsSold = getDoubleFromCell(reportSheet.getRow(reportRowNum).getCell(8));
 			String royaltyTemp = reportSheet.getRow(reportRowNum).getCell(4).toString();
-			double amazonRoyalty = (Double.parseDouble(royaltyTemp.replaceAll("%", ""))) / 100;
+			royaltyTemp = royaltyTemp.replaceAll("[a-zA-Z% -]", "");
+			double amazonRoyalty = (Double.parseDouble(royaltyTemp)) / 100;
 			
 			// Populate needed values from stock sheet:
 			int stockRowNum = findRowNumber(stockSheet, asin);
